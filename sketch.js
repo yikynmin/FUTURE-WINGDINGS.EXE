@@ -9,7 +9,6 @@ let deerY = 0;
 
 // =====================================================
 // INTRO
-// 여기 내용만 수정하면 됨
 // =====================================================
 
 const INTRO_TEXT = `
@@ -2325,7 +2324,7 @@ function createContactWindow() {
 
   let instagram =
     createA(
-      "https://instagram.com/yikymin",
+      "https://instagram.com/yikynmin",
       "INSTAGRAM ↗",
       "_blank"
     );
