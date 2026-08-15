@@ -1,37 +1,80 @@
 let typedText = "";
 let textarea;
-let thanksLink;
 let deerGif;
 let contactWindow;
 
 let deerX = 0;
 let deerY = 0;
 
+let fullscreenButton;
+
+
 // =====================================================
 // INTRO
 // =====================================================
 
-const INTRO_TEXT = `
+const INTRO_TEXT_ENG = `
 
 F̶̘̮͍Ũ̶̟̱T̶̪̞̳Ṷ̶̦̀̀̂Ŕ̸̝̝̔E̸̟͇̓̽̐
 
 W҉̤̗I҉͓̭̝N̸͙̪̗G̶̗̮͗D̴̯̥Î̴̪̝N̷͙͕Ğ̶͍S҉̖̱̦
 
 
+This is a near-future speculation.
+How might we disrupt the surveillance and collection of text?
+If we imagine a form of reading that humans can understand but computers cannot as a possible direction for reading in the future, could a typeface made up of symbols, like Wingdings, be repurposed for a new function and use?
+Could this give rise to Wingdings Neue?
+
 What will the future Wingdings be like?
 
 `;
 
+
+const INTRO_TEXT_KOR = `
+
+F̶̘̮͍Ũ̶̟̱T̶̪̞̳Ṷ̶̦̀̀̂Ŕ̸̝̝̔E̸̟͇̓̽̐
+
+W҉̤̗I҉͓̭̝N̸͙̪̗G̶̗̮͗D̴̯̥Î̴̪̝N̷͙͕Ğ̶͍S҉̖̱̦
+
+
+이것은 근미래적인 상상이다.
+텍스트의 검열과 수집을 어떻게 교란할 수 있을까?
+사람은 읽을 수 있지만 컴퓨터는 읽을 수 없는 읽기를 미래적 읽기의 지향점이라고 상정한다면, 윙딩과 같은 기호로 이루어진 타입 한 벌이 새로운 목적과 용도로 쓰일 수 있지 않을까?
+그래서 뉴-윙딩스(Wingdings Neue)가 나오지 않을까?
+
+미래의 윙딩어는 어떻게 될것인가?
+
+`;
+
+
+let introLanguage = "ENG";
+
 let introOpen = false;
 let introduceLink;
+
+let engButton;
+let korButton;
+
+function getIntroText() {
+
+  if (
+    introLanguage === "KOR"
+  ) {
+
+    return INTRO_TEXT_KOR;
+
+  }
+
+  return INTRO_TEXT_ENG;
+}
 
 
 // =====================================================
 // COLORS
 // =====================================================
 
-let bgColor = "#0000FF";
-let textColor = "#FFFFFF";
+let bgColor = "#dee2e6";
+let textColor = "#0000ff";
 
 
 // =====================================================
@@ -143,7 +186,7 @@ const SPEED_OPTIONS = [
 // =====================================================
 
 const UI_FONT =
-  "'Helvetica Neue', Helvetica, Arial, sans-serif";
+  '"Pixel Times", serif';
 
 
 const FONT_OPTIONS = [
@@ -200,35 +243,41 @@ const PANEL_WIDTH =
   PANEL_X;
 
 
+// CONTACT / LANGUAGE ALIGNMENT
+
+const CONTACT_RIGHT = 24;
+const CONTACT_TOP = 24;
+const CONTACT_W = 230;
+
+
 // =====================================================
 // UI SIZE
 // =====================================================
 
 const BUTTON_H = 21;
 
-const BUTTON_GAP = 3;
+const BUTTON_GAP = 2;
 
-const SECTION_GAP = 15;
+const SECTION_GAP = 18;
 
-const SECTION_TITLE_H = 10;
+const SECTION_TITLE_H = 7;
 
-const TITLE_TO_LINE = 6;
+const TITLE_TO_LINE = 3;
 
-const LINE_TO_CONTENT = 7;
+const LINE_TO_CONTENT = 4;
 
 
 // =====================================================
 // FIXED POSITIONS
 // =====================================================
 
-const TITLE_Y = 16;
-const INTRO_Y = 62;
-const THANKS_Y = 75;
+const TITLE_Y = 20;
+const INTRO_Y = 60;
 
 
 // COLOR
 
-const COLOR_Y = 106;
+const COLOR_Y = 100;
 
 const COLOR_LINE_Y =
   COLOR_Y +
@@ -310,29 +359,12 @@ const FONT_CONTENT_Y =
 const FONT_ROWS = 4;
 
 
-// GLITCH
-
-const GLITCH_Y =
-  FONT_CONTENT_Y +
-  FONT_ROWS * BUTTON_H +
-  (FONT_ROWS - 1) * BUTTON_GAP +
-  SECTION_GAP;
-
-const GLITCH_LINE_Y =
-  GLITCH_Y +
-  SECTION_TITLE_H +
-  TITLE_TO_LINE;
-
-const GLITCH_CONTENT_Y =
-  GLITCH_LINE_Y +
-  LINE_TO_CONTENT;
-
-
 // SPEED
 
 const SPEED_Y =
-  GLITCH_CONTENT_Y +
-  BUTTON_H +
+  FONT_CONTENT_Y +
+  FONT_ROWS * BUTTON_H +
+  (FONT_ROWS - 1) * BUTTON_GAP +
   SECTION_GAP;
 
 const SPEED_LINE_Y =
@@ -342,6 +374,51 @@ const SPEED_LINE_Y =
 
 const SPEED_CONTENT_Y =
   SPEED_LINE_Y +
+  LINE_TO_CONTENT;
+
+
+// OCR
+
+const OCR_BUTTON_H = 36;
+const OCR_CONTROL_W = 36;
+const OCR_PANEL_GAP = 2;
+const OCR_PANEL_H = 110;
+
+const OCR_Y =
+  SPEED_CONTENT_Y +
+  BUTTON_H * 2 +
+  BUTTON_GAP +
+  SECTION_GAP;
+
+const OCR_LINE_Y =
+  OCR_Y +
+  SECTION_TITLE_H +
+  TITLE_TO_LINE;
+
+const OCR_CONTENT_Y =
+  OCR_LINE_Y +
+  LINE_TO_CONTENT;
+
+const OCR_PANEL_Y =
+  OCR_CONTENT_Y +
+  OCR_BUTTON_H +
+  OCR_PANEL_GAP;
+
+
+// VIEW / FULLSCREEN
+
+const VIEW_Y =
+  OCR_PANEL_Y +
+  OCR_PANEL_H +
+  SECTION_GAP;
+
+const VIEW_LINE_Y =
+  VIEW_Y +
+  SECTION_TITLE_H +
+  TITLE_TO_LINE;
+
+const VIEW_CONTENT_Y =
+  VIEW_LINE_Y +
   LINE_TO_CONTENT;
 
 
@@ -380,7 +457,14 @@ let fontButtons = [];
 let speedButtons = {};
 
 let pauseButton;
-
+let scanTextButton;
+let ocrPanel;
+let ocrReadabilityEl;
+let ocrTextEl;
+let ocrWorker;
+let ocrReady = false;
+let ocrRunning = false;
+let ocrCurrentLangKey = "eng";
 
 // =====================================================
 // ASCII
@@ -435,13 +519,47 @@ const ASCII_GLITCH = [
 let charStates = [];
 
 let introCharStates = [];
+let introLayoutCache = {
+  source: "",
+  maxWidth: -1,
+  lines: []
+};
+function loadPixelTimesUI() {
 
+  const style =
+    document.createElement(
+      "style"
+    );
+
+  style.textContent = `
+
+    @font-face {
+      font-family: "Pixel Times";
+      src: url("Pixel Times.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "Pixel Times";
+      src: url("Pixel Times Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+    }
+
+  `;
+
+  document.head.appendChild(
+    style
+  );
+}
 
 // =====================================================
 // SETUP
 // =====================================================
-
 function setup() {
+
+  loadPixelTimesUI();
 
   createCanvas(
     windowWidth,
@@ -481,11 +599,1111 @@ function setup() {
 
   updateInterface();
   
+  updateLanguageButtons();
+  
   createDeerGif();
 
   createContactWindow();
+  initOCR();
 }
 
+async function ensureTesseractLoaded() {
+
+  if (
+    typeof Tesseract !== "undefined"
+  ) {
+    return;
+  }
+
+
+  await new Promise(
+    function (resolve, reject) {
+
+      const existing =
+        document.querySelector(
+          'script[data-wingdings-ocr="true"]'
+        );
+
+
+      if (
+        existing
+      ) {
+
+        if (
+          typeof Tesseract !==
+          "undefined"
+        ) {
+
+          resolve();
+
+          return;
+        }
+
+
+        existing.addEventListener(
+          "load",
+          resolve,
+          { once: true }
+        );
+
+        existing.addEventListener(
+          "error",
+          reject,
+          { once: true }
+        );
+
+        return;
+      }
+
+
+      const script =
+        document.createElement(
+          "script"
+        );
+
+
+      script.src =
+        "https://cdn.jsdelivr.net/npm/tesseract.js@7/dist/tesseract.min.js";
+
+      script.async = true;
+
+      script.dataset.wingdingsOcr =
+        "true";
+
+
+      script.onload =
+        resolve;
+
+      script.onerror =
+        reject;
+
+
+      document.head.appendChild(
+        script
+      );
+    }
+  );
+}
+
+
+// =====================================================
+// OCR LANGUAGE
+// typedText 자체를 보고 필요한 OCR 모델만 선택한다.
+// =====================================================
+
+function detectOCRLanguages(
+  source
+) {
+
+  const text =
+    String(
+      source || ""
+    );
+
+
+  const hasKorean =
+    /[가-힣ㄱ-ㅎㅏ-ㅣ]/.test(
+      text
+    );
+
+
+  const hasKana =
+    /[\u3040-\u30FF]/.test(
+      text
+    );
+
+
+  const hasHan =
+    /[\u3400-\u4DBF\u4E00-\u9FFF]/.test(
+      text
+    );
+
+
+  const hasLatin =
+    /[A-Za-z]/.test(
+      text
+    );
+
+
+  // 한국어 + 일본어가 동시에 있으면 세 모델을 모두 사용.
+  if (
+    hasKorean &&
+    (
+      hasKana ||
+      hasHan
+    )
+  ) {
+
+    return [
+      "kor",
+      "jpn",
+      "eng"
+    ];
+  }
+
+
+  // 한글이 있으면 한국어 모델을 우선.
+  if (
+    hasKorean
+  ) {
+
+    return hasLatin
+      ? [
+          "kor",
+          "eng"
+        ]
+      : [
+          "kor"
+        ];
+  }
+
+
+  // 히라가나/가타카나 또는 한자가 있으면 일본어 모델을 우선.
+  if (
+    hasKana ||
+    hasHan
+  ) {
+
+    return hasLatin
+      ? [
+          "jpn",
+          "eng"
+        ]
+      : [
+          "jpn"
+        ];
+  }
+
+
+  return [
+    "eng"
+  ];
+}
+
+
+function getOCRLanguageKey(
+  languages
+) {
+
+  return languages.join(
+    "+"
+  );
+}
+
+
+async function applyOCRParameters() {
+
+  await ocrWorker.setParameters({
+
+    tessedit_pageseg_mode:
+      "6",
+
+    preserve_interword_spaces:
+      "1"
+  });
+}
+
+
+async function ensureOCRLanguage(
+  source
+) {
+
+  const languages =
+    detectOCRLanguages(
+      source
+    );
+
+
+  const nextKey =
+    getOCRLanguageKey(
+      languages
+    );
+
+
+  if (
+    nextKey ===
+    ocrCurrentLangKey
+  ) {
+
+    return languages;
+  }
+
+
+  ocrTextEl.html(
+    "LOADING " +
+    nextKey.toUpperCase() +
+    "..."
+  );
+
+
+  await ocrWorker.reinitialize(
+    languages
+  );
+
+
+  await applyOCRParameters();
+
+
+  ocrCurrentLangKey =
+    nextKey;
+
+
+  return languages;
+}
+
+
+// =====================================================
+// OCR INIT
+// =====================================================
+
+async function initOCR() {
+
+  try {
+
+    if (
+      ocrTextEl
+    ) {
+
+      ocrTextEl.html(
+        "LOADING OCR..."
+      );
+    }
+
+
+    await ensureTesseractLoaded();
+
+
+    ocrWorker =
+      await Tesseract.createWorker(
+        "eng"
+      );
+
+
+    ocrCurrentLangKey =
+      "eng";
+
+
+    await applyOCRParameters();
+
+
+    ocrReady = true;
+
+
+    if (
+      ocrTextEl
+    ) {
+
+      ocrTextEl.html(
+        "READY TO SCAN"
+      );
+    }
+
+  } catch (error) {
+
+    console.error(
+      "OCR INIT ERROR:",
+      error
+    );
+
+
+    ocrReady = false;
+
+
+    if (
+      ocrTextEl
+    ) {
+
+      ocrTextEl.html(
+        "[OCR LOAD ERROR]"
+      );
+    }
+  }
+}
+
+
+// =====================================================
+// READABILITY
+// =====================================================
+
+function normalizeOCRText(
+  text
+) {
+
+  return String(
+    text || ""
+  )
+    .normalize(
+      "NFKC"
+    )
+    .toUpperCase()
+    .replace(
+      /\s+/g,
+      " "
+    )
+    .trim();
+}
+
+
+function levenshteinDistance(
+  a,
+  b
+) {
+
+  if (
+    a === b
+  ) {
+    return 0;
+  }
+
+
+  if (
+    a.length === 0
+  ) {
+    return b.length;
+  }
+
+
+  if (
+    b.length === 0
+  ) {
+    return a.length;
+  }
+
+
+  let previous =
+    new Array(
+      b.length + 1
+    );
+
+  let current =
+    new Array(
+      b.length + 1
+    );
+
+
+  for (
+    let j = 0;
+    j <= b.length;
+    j++
+  ) {
+
+    previous[j] =
+      j;
+  }
+
+
+  for (
+    let i = 1;
+    i <= a.length;
+    i++
+  ) {
+
+    current[0] =
+      i;
+
+
+    for (
+      let j = 1;
+      j <= b.length;
+      j++
+    ) {
+
+      const cost =
+        a[i - 1] ===
+        b[j - 1]
+          ? 0
+          : 1;
+
+
+      current[j] =
+        Math.min(
+
+          previous[j] +
+          1,
+
+          current[j - 1] +
+          1,
+
+          previous[j - 1] +
+          cost
+        );
+    }
+
+
+    const swap =
+      previous;
+
+    previous =
+      current;
+
+    current =
+      swap;
+  }
+
+
+  return previous[
+    b.length
+  ];
+}
+
+
+function calculateReadability(
+  original,
+  recognized
+) {
+
+  const a =
+    normalizeOCRText(
+      original
+    );
+
+  const b =
+    normalizeOCRText(
+      recognized
+    );
+
+
+  if (
+    a.length === 0 ||
+    b.length === 0
+  ) {
+    return 0;
+  }
+
+
+  const distance =
+    levenshteinDistance(
+      a,
+      b
+    );
+
+
+  const maxLength =
+    Math.max(
+      a.length,
+      b.length
+    );
+
+
+  const score =
+    1 -
+    distance /
+    maxLength;
+
+
+  return Math.max(
+    0,
+    Math.min(
+      100,
+      Math.round(
+        score *
+        100
+      )
+    )
+  );
+}
+
+
+function setOCRReadability(
+  value
+) {
+
+  if (
+    !ocrReadabilityEl
+  ) {
+    return;
+  }
+
+
+  ocrReadabilityEl
+    .elt
+    .innerHTML =
+      "<span>READABILITY</span>" +
+      "<span>" +
+      value +
+      "%</span>";
+}
+
+
+// =====================================================
+// OCR CROP
+// 실제 타이포 영역만 잘라낸다.
+// =====================================================
+
+function getOCRTextBounds() {
+
+  const size =
+    getAdaptiveTextSize();
+
+
+  textFont(
+    currentFont
+  );
+
+  applyTypeWeight();
+
+  textSize(
+    size
+  );
+
+
+  const contentWidth =
+    getContentWidth();
+
+
+  const contentLeft =
+    SIDEBAR_W +
+    CANVAS_PADDING_X;
+
+
+  const contentCenter =
+    SIDEBAR_W +
+    (
+      width -
+      SIDEBAR_W
+    ) /
+    2;
+
+
+  const lines =
+    wrapTextToWidth(
+      typedText,
+      contentWidth
+    );
+
+
+  const lineHeight =
+    size *
+    LINE_HEIGHT_RATIO;
+
+
+  const totalHeight =
+    lines.length *
+    lineHeight;
+
+
+  const startY =
+    height /
+    2 -
+    totalHeight /
+    2 +
+    lineHeight /
+    2;
+
+
+  let minX =
+    width;
+
+  let maxX =
+    SIDEBAR_W;
+
+  let minY =
+    height;
+
+  let maxY =
+    0;
+
+
+  for (
+    let row = 0;
+    row < lines.length;
+    row++
+  ) {
+
+    const line =
+      lines[row];
+
+
+    const lineWidth =
+      Math.max(
+        1,
+        textWidth(
+          line
+        )
+      );
+
+
+    let x;
+
+
+    if (
+      textAlignment ===
+      "LEFT"
+    ) {
+
+      x =
+        contentLeft;
+
+    } else {
+
+      x =
+        contentCenter -
+        lineWidth /
+        2;
+    }
+
+
+    const y =
+      startY +
+      row *
+      lineHeight;
+
+
+    minX =
+      Math.min(
+        minX,
+        x
+      );
+
+    maxX =
+      Math.max(
+        maxX,
+        x +
+        lineWidth
+      );
+
+    minY =
+      Math.min(
+        minY,
+        y -
+        lineHeight *
+        0.75
+      );
+
+    maxY =
+      Math.max(
+        maxY,
+        y +
+        lineHeight *
+        0.75
+      );
+  }
+
+
+  const padX =
+    Math.max(
+      28,
+      size *
+      0.4
+    );
+
+  const padY =
+    Math.max(
+      24,
+      size *
+      0.35
+    );
+
+
+  minX =
+    Math.max(
+      SIDEBAR_W +
+      2,
+      minX -
+      padX
+    );
+
+  maxX =
+    Math.min(
+      width -
+      2,
+      maxX +
+      padX
+    );
+
+  minY =
+    Math.max(
+      2,
+      minY -
+      padY
+    );
+
+  maxY =
+    Math.min(
+      height -
+      2,
+      maxY +
+      padY
+    );
+
+
+  return {
+
+    x:
+      minX,
+
+    y:
+      minY,
+
+    w:
+      Math.max(
+        1,
+        maxX -
+        minX
+      ),
+
+    h:
+      Math.max(
+        1,
+        maxY -
+        minY
+      )
+  };
+}
+
+
+// =====================================================
+// OCR IMAGE PREPROCESS
+// pixelDensity 보정 + 색상 제거 + 흑백 변환
+// =====================================================
+
+function buildOCRCanvas() {
+
+  const sourceCanvas =
+    document.querySelector(
+      "canvas"
+    );
+
+
+  const bounds =
+    getOCRTextBounds();
+
+
+  const scaleX =
+    sourceCanvas.width /
+    width;
+
+  const scaleY =
+    sourceCanvas.height /
+    height;
+
+
+  const sx =
+    bounds.x *
+    scaleX;
+
+  const sy =
+    bounds.y *
+    scaleY;
+
+  const sw =
+    bounds.w *
+    scaleX;
+
+  const sh =
+    bounds.h *
+    scaleY;
+
+
+  // CJK 획을 살리기 위해 OCR 입력을 충분히 크게 만든다.
+  const targetScale =
+    3;
+
+
+  const target =
+    document.createElement(
+      "canvas"
+    );
+
+
+  target.width =
+    Math.max(
+      1,
+      Math.round(
+        bounds.w *
+        targetScale
+      )
+    );
+
+  target.height =
+    Math.max(
+      1,
+      Math.round(
+        bounds.h *
+        targetScale
+      )
+    );
+
+
+  const ctx =
+    target.getContext(
+      "2d",
+      {
+        willReadFrequently:
+          true
+      }
+    );
+
+
+  ctx.imageSmoothingEnabled =
+    true;
+
+
+  ctx.fillStyle =
+    "#FFFFFF";
+
+  ctx.fillRect(
+    0,
+    0,
+    target.width,
+    target.height
+  );
+
+
+  ctx.drawImage(
+    sourceCanvas,
+
+    sx,
+    sy,
+    sw,
+    sh,
+
+    0,
+    0,
+    target.width,
+    target.height
+  );
+
+
+  // p5 Web Editor의 infinite-loop detector가
+  // 대형 pixel for-loop를 오탐하므로 픽셀 순회는 하지 않는다.
+  // Canvas filter로 OCR용 고대비 흑백 이미지를 다시 만든다.
+
+  const filtered =
+    document.createElement(
+      "canvas"
+    );
+
+
+  filtered.width =
+    target.width;
+
+  filtered.height =
+    target.height;
+
+
+  const filteredCtx =
+    filtered.getContext(
+      "2d"
+    );
+
+
+  filteredCtx.fillStyle =
+    "#FFFFFF";
+
+  filteredCtx.fillRect(
+    0,
+    0,
+    filtered.width,
+    filtered.height
+  );
+
+
+  // 현재 BG/TXT의 밝기를 비교해서
+  // 밝은 글자/어두운 배경이면 OCR에 유리하도록 반전.
+  const bg =
+    color(
+      bgColor
+    );
+
+  const fg =
+    color(
+      textColor
+    );
+
+
+  const bgLum =
+    0.2126 * red(bg) +
+    0.7152 * green(bg) +
+    0.0722 * blue(bg);
+
+
+  const fgLum =
+    0.2126 * red(fg) +
+    0.7152 * green(fg) +
+    0.0722 * blue(fg);
+
+
+  if (
+    fgLum >
+    bgLum
+  ) {
+
+    filteredCtx.filter =
+      "grayscale(1) invert(1) contrast(300%)";
+
+  } else {
+
+    filteredCtx.filter =
+      "grayscale(1) contrast(300%)";
+  }
+
+
+  filteredCtx.drawImage(
+    target,
+    0,
+    0
+  );
+
+
+  filteredCtx.filter =
+    "none";
+
+
+  return filtered;
+}
+
+
+// =====================================================
+// OCR SCAN
+// =====================================================
+
+async function scanTextOCR() {
+
+  if (
+    ocrRunning
+  ) {
+    return;
+  }
+
+
+  if (
+    typedText.trim().length ===
+    0
+  ) {
+
+    setOCRReadability(
+      0
+    );
+
+    ocrTextEl.html(
+      "[NO TEXT]"
+    );
+
+    return;
+  }
+
+
+  if (
+    !ocrReady ||
+    !ocrWorker
+  ) {
+
+    ocrTextEl.html(
+      "OCR IS LOADING..."
+    );
+
+    return;
+  }
+
+
+  ocrRunning =
+    true;
+
+
+  scanTextButton.html(
+    "SCANNING..."
+  );
+
+
+  try {
+
+    // typedText에 한글/일본어가 있으면 해당 모델로 자동 전환.
+    await ensureOCRLanguage(
+      typedText
+    );
+
+
+    ocrTextEl.html(
+      "READING..."
+    );
+
+
+    // 현재 프레임이 그려진 뒤 캡처.
+    await new Promise(
+      function (resolve) {
+
+        requestAnimationFrame(
+          resolve
+        );
+      }
+    );
+
+
+    const ocrCanvas =
+      buildOCRCanvas();
+
+
+    const result =
+      await ocrWorker.recognize(
+        ocrCanvas
+      );
+
+
+    const machineText =
+      String(
+        result.data.text ||
+        ""
+      )
+        .trim();
+
+
+    const readability =
+      calculateReadability(
+        typedText,
+        machineText
+      );
+
+
+    setOCRReadability(
+      readability
+    );
+
+
+    ocrTextEl.html(
+      machineText ||
+      "[UNREADABLE]"
+    );
+
+
+    ocrTextEl
+      .elt
+      .scrollTop =
+        0;
+
+  } catch (error) {
+
+    console.error(
+      "OCR ERROR:",
+      error
+    );
+
+
+    ocrReadabilityEl
+      .elt
+      .innerHTML =
+        "<span>READABILITY</span>" +
+        "<span>--%</span>";
+
+
+    ocrTextEl.html(
+      "[OCR ERROR]"
+    );
+
+  } finally {
+
+    scanTextButton.html(
+      "SCAN TEXT"
+    );
+
+
+    ocrRunning =
+      false;
+
+
+    restoreTyping();
+  }
+}
 
 // =====================================================
 // TEXTAREA
@@ -614,7 +1832,7 @@ titleEl.style(
 
 titleEl.style(
   "font-size",
-  "17px"
+  "18px"
 );
 
 titleEl.style(
@@ -629,7 +1847,7 @@ titleEl.style(
 
 titleEl.style(
   "letter-spacing",
-  "-0.65px"
+  "-0.75px"
 );
 
 titleEl.style(
@@ -658,6 +1876,10 @@ titleEl.mousePressed(
     introduceLink.html(
       "INTRODUCE →"
     );
+
+    
+    updateLanguageButtons();
+
 
 
     if (
@@ -699,10 +1921,9 @@ titleEl.mousePressed(
     "fixed"
   );
 
-  introduceLink.style(
-    "font-family",
-    UI_FONT
-  );
+  applyBitmapUI(
+  introduceLink
+);
 
   introduceLink.style(
     "font-size",
@@ -741,15 +1962,18 @@ titleEl.mousePressed(
     introOpen =
       !introOpen;
 
-
     introduceLink.html(
       introOpen
         ? "INTRODUCE ×"
         : "INTRODUCE →"
+      
     );
 
 
-    if (
+    
+    updateLanguageButtons();
+
+if (
       introOpen
     ) {
 
@@ -787,6 +2011,110 @@ titleEl.mousePressed(
   }
 );
 
+  // =====================================================
+// INTRO LANGUAGE
+// =====================================================
+
+engButton =
+  createButton(
+    "ENG"
+  );
+
+korButton =
+  createButton(
+    "KOR"
+  );
+
+
+let langW =
+  42;
+
+let langH =
+  21;
+
+
+styleButton(
+  engButton,
+  langW,
+  langH
+);
+
+styleButton(
+  korButton,
+  langW,
+  langH
+);
+
+
+// CONTACT WINDOW의 왼쪽 모서리에 정확히 맞춤
+
+korButton.style(
+  "top",
+  CONTACT_TOP + "px"
+);
+
+korButton.style(
+  "right",
+  (CONTACT_RIGHT + CONTACT_W + 6) + "px"
+);
+
+korButton.style(
+  "left",
+  "auto"
+);
+
+
+engButton.style(
+  "top",
+  CONTACT_TOP + "px"
+);
+
+engButton.style(
+  "right",
+  (
+    CONTACT_RIGHT +
+    CONTACT_W + 
+    langW +
+    BUTTON_GAP + 10
+  ) + "px"
+);
+
+engButton.style(
+  "left",
+  "auto"
+);
+
+
+engButton.mousePressed(
+  function () {
+
+    introLanguage =
+      "ENG";
+
+    syncIntroStates();
+
+    updateLanguageButtons();
+
+    restoreTyping();
+  }
+);
+
+
+korButton.mousePressed(
+  function () {
+
+    introLanguage =
+      "KOR";
+
+    syncIntroStates();
+
+    updateLanguageButtons();
+
+    restoreTyping();
+  }
+);
+
+  
 // =====================================================
 // CONTACT WINDOW
 // =====================================================
@@ -804,17 +2132,17 @@ function createContactWindow() {
 
   contactWindow.style(
     "right",
-    "24px"
+    CONTACT_RIGHT + "px"
   );
 
   contactWindow.style(
     "top",
-    "24px"
+    CONTACT_TOP + "px"
   );
 
   contactWindow.style(
     "width",
-    "230px"
+    CONTACT_W + "px"
   );
 
   contactWindow.style(
@@ -1027,10 +2355,9 @@ function styleContactLink(
     "#111111"
   );
 
-  link.style(
-    "font-family",
-    UI_FONT
-  );
+  applyBitmapUI(
+  link
+);
 
   link.style(
     "font-size",
@@ -1105,74 +2432,10 @@ function styleContactLink(
     }
   );
 }
+
   // =====================================================
-  // THANKS TO
+  // COLOR
   // =====================================================
-
-  thanksLink =
-    createA(
-      "https://youtu.be/AET7tdoF93o?si=Kv7-CuiYMnxFkCEj&t=1201",
-      "THANKS TO... ↗",
-      "_blank"
-    );
-
-
-  thanksLink.attribute(
-    "rel",
-    "noopener noreferrer"
-  );
-
-
-  thanksLink.position(
-    PANEL_X,
-    THANKS_Y
-  );
-
-
-  thanksLink.style(
-    "position",
-    "fixed"
-  );
-
-  thanksLink.style(
-    "font-family",
-    UI_FONT
-  );
-
-  thanksLink.style(
-    "font-size",
-    "9px"
-  );
-
-  thanksLink.style(
-    "font-weight",
-    "700"
-  );
-
-  thanksLink.style(
-    "letter-spacing",
-    "0.2px"
-  );
-
-  thanksLink.style(
-    "text-decoration",
-    "none"
-  );
-
-  thanksLink.style(
-    "cursor",
-    "pointer"
-  );
-
-  thanksLink.style(
-    "z-index",
-    "1000"
-  );
-
-  thanksLink.style(
-    "user-select",
-    "none"
-  );
 
 
   // =====================================================
@@ -1330,51 +2593,6 @@ addMomentaryPressStyle(
 
 
   // =====================================================
-  // GLITCH
-  // =====================================================
-
-  createSectionLabel(
-    "GLITCH",
-    GLITCH_Y
-  );
-
-
-  pauseButton =
-    createButton(
-      "PAUSE"
-    );
-
-
-  createWideButton(
-    pauseButton,
-    GLITCH_CONTENT_Y
-  );
-
-
-  pauseButton.mousePressed(
-    function () {
-
-      glitchPaused =
-        !glitchPaused;
-
-
-      pauseButton.html(
-
-        glitchPaused
-          ? "RESUME"
-          : "PAUSE"
-
-      );
-
-
-      updateInterface();
-
-      restoreTyping();
-    }
-  );
-
-
-  // =====================================================
   // SPEED
   // =====================================================
 
@@ -1384,6 +2602,183 @@ addMomentaryPressStyle(
   );
 
   createSpeedButtons();
+
+
+  // =====================================================
+  // OCR
+  // =====================================================
+
+  createSectionLabel(
+    "OCR",
+    OCR_Y
+  );
+
+
+  const scanW =
+    PANEL_WIDTH -
+    OCR_CONTROL_W -
+    BUTTON_GAP;
+
+
+  // LEFT : PLAY / PAUSE
+
+  pauseButton =
+    createButton(
+      ""
+    );
+
+  pauseButton.position(
+    PANEL_X,
+    OCR_CONTENT_Y
+  );
+
+  styleButton(
+    pauseButton,
+    OCR_CONTROL_W,
+    OCR_BUTTON_H
+  );
+
+  setTransportIcon(
+    pauseButton,
+    glitchPaused
+  );
+
+  pauseButton.mousePressed(
+    function () {
+
+      glitchPaused =
+        !glitchPaused;
+
+      setTransportIcon(
+        pauseButton,
+        glitchPaused
+      );
+
+      updateInterface();
+
+      restoreTyping();
+    }
+  );
+
+
+  // RIGHT : SCAN TEXT
+
+  scanTextButton =
+    createButton(
+      "SCAN TEXT"
+    );
+
+  scanTextButton.position(
+    PANEL_X +
+    OCR_CONTROL_W +
+    BUTTON_GAP,
+    OCR_CONTENT_Y
+  );
+
+  styleButton(
+    scanTextButton,
+    scanW,
+    OCR_BUTTON_H
+  );
+
+  styleMomentaryButton(
+    scanTextButton
+  );
+
+  addMomentaryPressStyle(
+    scanTextButton
+  );
+
+  scanTextButton.mousePressed(
+  function () {
+
+    scanTextOCR();
+
+  }
+);
+createOCRPanel();
+
+  // =====================================================
+  // VIEW
+  // =====================================================
+
+  createSectionLabel(
+    "VIEW",
+    VIEW_Y
+  );
+
+
+  fullscreenButton =
+    createButton(
+      "FULLSCREEN"
+    );
+
+
+  createWideButton(
+    fullscreenButton,
+    VIEW_CONTENT_Y
+  );
+
+
+  styleMomentaryButton(
+    fullscreenButton
+  );
+
+  addMomentaryPressStyle(
+    fullscreenButton
+  );
+
+
+  fullscreenButton.mousePressed(
+    function () {
+
+      fullscreen(
+        !fullscreen()
+      );
+
+      restoreTyping();
+    }
+  );
+}
+
+
+// =====================================================
+// INTRO LANGUAGE BUTTON STATE
+// =====================================================
+
+function updateLanguageButtons() {
+
+  if (
+    !engButton ||
+    !korButton
+  ) {
+    return;
+  }
+
+
+  styleButtonState(
+    engButton,
+    introLanguage === "ENG"
+  );
+
+  styleButtonState(
+    korButton,
+    introLanguage === "KOR"
+  );
+
+
+  if (
+    introOpen
+  ) {
+
+    engButton.show();
+    korButton.show();
+
+  } else {
+
+    engButton.hide();
+    korButton.hide();
+  }
 }
 
 
@@ -1418,10 +2813,9 @@ function createSectionLabel(
     "fixed"
   );
 
-  el.style(
-    "font-family",
-    UI_FONT
-  );
+  applyBitmapUI(
+  el
+);
 
   el.style(
     "font-size",
@@ -1435,7 +2829,7 @@ function createSectionLabel(
 
   el.style(
     "letter-spacing",
-    "0.3px"
+    "0.5px"
   );
 
   el.style(
@@ -1462,7 +2856,7 @@ function styleButton(
   w,
   h
 ) {
-
+  
   button.style(
     "position",
     "fixed"
@@ -1480,9 +2874,13 @@ function styleButton(
 
   button.style(
     "padding",
-    "0 4px"
+    "0 0px"
   );
-
+  
+button.style(
+  "padding-top",
+  "2px"
+);
   button.style(
     "margin",
     "0"
@@ -1493,10 +2891,9 @@ function styleButton(
     "0"
   );
 
-  button.style(
-    "font-family",
-    UI_FONT
-  );
+  applyBitmapUI(
+  button
+);
 
   button.style(
     "font-size",
@@ -1516,6 +2913,304 @@ function styleButton(
   button.style(
     "z-index",
     "100"
+  );
+  
+}
+
+
+// =====================================================
+// TRANSPORT ICON
+// =====================================================
+
+function setTransportIcon(
+  button,
+  paused
+) {
+
+  if (
+    !button
+  ) {
+    return;
+  }
+
+
+  if (
+    paused
+  ) {
+
+    // stopped → show PLAY triangle
+
+    button.elt.innerHTML =
+      '<span style="' +
+      'display:block;' +
+      'width:0;' +
+      'height:0;' +
+      'border-top:6px solid transparent;' +
+      'border-bottom:6px solid transparent;' +
+      'border-left:10px solid #111111;' +
+      'margin-left:2px;' +
+      '"></span>';
+
+  } else {
+
+    // running → show PAUSE bars
+
+    button.elt.innerHTML =
+      '<span style="' +
+      'display:flex;' +
+      'gap:4px;' +
+      'align-items:center;' +
+      'justify-content:center;' +
+      '">' +
+      '<span style="' +
+      'display:block;' +
+      'width:4px;' +
+      'height:13px;' +
+      'background:#111111;' +
+      '"></span>' +
+      '<span style="' +
+      'display:block;' +
+      'width:4px;' +
+      'height:13px;' +
+      'background:#111111;' +
+      '"></span>' +
+      '</span>';
+  }
+
+
+  button.style(
+    "display",
+    "flex"
+  );
+
+  button.style(
+    "align-items",
+    "center"
+  );
+
+  button.style(
+    "justify-content",
+    "center"
+  );
+}
+
+
+// =====================================================
+// OCR RESULT PANEL
+// =====================================================
+
+function createOCRPanel() {
+
+  ocrPanel =
+    createDiv(
+      ""
+    );
+
+  ocrPanel.position(
+    PANEL_X,
+    OCR_PANEL_Y
+  );
+
+  ocrPanel.style(
+    "position",
+    "fixed"
+  );
+
+  ocrPanel.style(
+    "width",
+    PANEL_WIDTH + "px"
+  );
+
+  ocrPanel.style(
+    "height",
+    OCR_PANEL_H + "px"
+  );
+
+  ocrPanel.style(
+    "box-sizing",
+    "border-box"
+  );
+
+  ocrPanel.style(
+    "padding",
+    "4px"
+  );
+
+  ocrPanel.style(
+    "background",
+    "#BEBEBE"
+  );
+
+  ocrPanel.style(
+    "border",
+    "3px outset #CCCCCC"
+  );
+
+  ocrPanel.style(
+    "z-index",
+    "100"
+  );
+
+
+  // READABILITY BAR
+
+  ocrReadabilityEl =
+    createDiv(
+      "READABILITY"
+    );
+
+  ocrReadabilityEl.parent(
+    ocrPanel
+  );
+
+  ocrReadabilityEl.style(
+    "height",
+    "24px"
+  );
+
+  ocrReadabilityEl.style(
+    "box-sizing",
+    "border-box"
+  );
+
+  ocrReadabilityEl.style(
+    "padding",
+    "2px 5px 0 5px"
+  );
+
+  ocrReadabilityEl.style(
+    "display",
+    "flex"
+  );
+
+  ocrReadabilityEl.style(
+    "align-items",
+    "center"
+  );
+
+  ocrReadabilityEl.style(
+    "justify-content",
+    "space-between"
+  );
+
+  ocrReadabilityEl.style(
+    "background",
+    "#FFFFFF"
+  );
+
+  ocrReadabilityEl.style(
+    "border",
+    "2px inset #CCCCCC"
+  );
+
+  ocrReadabilityEl.style(
+    "color",
+    "#111111"
+  );
+
+  ocrReadabilityEl.style(
+    "font-family",
+    UI_FONT
+  );
+
+  ocrReadabilityEl.style(
+    "font-size",
+    "8px"
+  );
+
+  ocrReadabilityEl.style(
+    "font-weight",
+    "700"
+  );
+
+  ocrReadabilityEl.elt.innerHTML =
+    '<span>READABILITY</span><span>--%</span>';
+
+
+  // MACHINE READ AREA
+
+  ocrTextEl =
+    createDiv(
+      "NO SCAN YET"
+    );
+
+  ocrTextEl.parent(
+    ocrPanel
+  );
+
+  ocrTextEl.style(
+    "height",
+    "74px"
+  );
+
+  ocrTextEl.style(
+    "margin-top",
+    "3px"
+  );
+
+  ocrTextEl.style(
+    "box-sizing",
+    "border-box"
+  );
+
+  ocrTextEl.style(
+    "padding",
+    "6px 6px"
+  );
+
+  ocrTextEl.style(
+    "background",
+    "#FFFFFF"
+  );
+
+  ocrTextEl.style(
+    "border",
+    "2px inset #CCCCCC"
+  );
+
+  ocrTextEl.style(
+    "color",
+    "#111111"
+  );
+
+  ocrTextEl.style(
+    "font-family",
+    UI_FONT
+  );
+
+  ocrTextEl.style(
+    "font-size",
+    "8px"
+  );
+
+  ocrTextEl.style(
+    "font-weight",
+    "700"
+  );
+
+  ocrTextEl.style(
+    "line-height",
+    "1.25"
+  );
+
+  ocrTextEl.style(
+    "white-space",
+    "pre-wrap"
+  );
+
+  ocrTextEl.style(
+    "word-break",
+    "break-word"
+  );
+
+  ocrTextEl.style(
+    "overflow-y",
+    "auto"
+  );
+
+  ocrTextEl.style(
+    "overflow-x",
+    "hidden"
   );
 }
 
@@ -2214,17 +3909,17 @@ function createContactWindow() {
 
   contactWindow.style(
     "right",
-    "24px"
+    CONTACT_RIGHT + "px"
   );
 
   contactWindow.style(
     "top",
-    "24px"
+    CONTACT_TOP + "px"
   );
 
   contactWindow.style(
     "width",
-    "230px"
+    CONTACT_W + "px"
   );
 
   contactWindow.style(
@@ -2324,7 +4019,7 @@ function createContactWindow() {
 
   let instagram =
     createA(
-      "https://instagram.com/yikynmin",
+      "https://instagram.com/yikymin",
       "INSTAGRAM ↗",
       "_blank"
     );
@@ -2728,26 +4423,7 @@ function updateInterface() {
     );
   }
 
-
-  // THANKS TO
-
-  if (
-    thanksLink
-  ) {
-
-    thanksLink.elt.style.setProperty(
-      "color",
-      textColor,
-      "important"
-    );
-
-
-    thanksLink.elt.style.setProperty(
-      "text-decoration",
-      "none",
-      "important"
-    );
-  }
+  // SECTION LABELS
 
 
   // SECTION LABELS
@@ -3295,9 +4971,13 @@ function syncIntroStates() {
   introCharStates = [];
 
 
+  let source =
+    getIntroText();
+
+
   for (
     let i = 0;
-    i < INTRO_TEXT.length;
+    i < source.length;
     i++
   ) {
 
@@ -3542,11 +5222,15 @@ function drawStructure() {
   );
 
   drawSectionLine(
-    GLITCH_LINE_Y
+    SPEED_LINE_Y
   );
 
   drawSectionLine(
-    SPEED_LINE_Y
+    OCR_LINE_Y
+  );
+
+  drawSectionLine(
+    VIEW_LINE_Y
   );
 
 
@@ -3625,7 +5309,7 @@ function wrapIntroText(
 
 
   textFont(
-    "Helvetica Neue"
+    "Pixel Times"
   );
 
   textStyle(
@@ -3633,7 +5317,7 @@ function wrapIntroText(
   );
 
   textSize(
-    20
+    14
   );
 
 
@@ -3715,13 +5399,22 @@ function wrapIntroText(
 }
 
 
-// =====================================================
-// DRAW INTRO
-// =====================================================
-
 function drawIntro() {
 
   push();
+
+
+  let source =
+    getIntroText();
+
+
+  if (
+    introCharStates.length !==
+    source.length
+  ) {
+
+    syncIntroStates();
+  }
 
 
   let left =
@@ -3731,138 +5424,153 @@ function drawIntro() {
 
   let maxWidth =
     min(
-      760,
+      600,
       width -
       left -
       70
     );
 
 
-  // BODY
-
   textFont(
-    "Helvetica Neue"
+    "Pixel Times"
   );
 
   textStyle(
-    BOLD
+    NORMAL
   );
 
   textSize(
-    10
+    14
   );
 
 
   let lineHeight =
-    26;
+    22;
 
 
-  let lines =
+  let lines;
+
+if (
+  introLayoutCache.source !==
+  source ||
+
+  introLayoutCache.maxWidth !==
+  maxWidth
+) {
+
+  introLayoutCache.source =
+    source;
+
+  introLayoutCache.maxWidth =
+    maxWidth;
+
+  introLayoutCache.lines =
     wrapIntroText(
-      INTRO_TEXT,
+      source,
       maxWidth
     );
+}
+
+
+lines =
+  introLayoutCache.lines;
+
+
+  textFont(
+    "Pixel Times"
+  );
+
+  textStyle(
+    NORMAL
+  );
+
+  textSize(
+    14
+  );
+
+  textAlign(
+    LEFT,
+    TOP
+  );
+
+  fill(
+    textColor
+  );
+
+  noStroke();
 
 
   let y =
     55;
 
-
   let stateIndex =
     0;
 
 
-  for (
-    let row = 0;
-    row < lines.length;
-    row++
-  ) {
-
-    let line =
-      lines[row];
-
-
-    if (
-      line === ""
-    ) {
-
-      y +=
-        lineHeight;
-
-      stateIndex++;
-
-      continue;
-    }
-
-
-    let cursorX =
-      left;
-
-
-    for (
-      let i = 0;
-      i < line.length;
-      i++
-    ) {
-
-      let original =
-        line[i];
-
-
-      let state =
-        introCharStates[
-          stateIndex %
-          introCharStates.length
-        ];
-
-
-      let display =
-        original;
-
+  lines.forEach(
+    function (line) {
 
       if (
-        state &&
-        state.glitching &&
-        original !== " "
+        line === ""
       ) {
 
-        display =
-          state.glitchChar;
+        y +=
+          lineHeight;
+
+        return;
       }
 
 
-      fill(
-        textColor
+      let cursorX =
+        left;
+
+
+      Array.from(line).forEach(
+        function (original) {
+
+          let state =
+            introCharStates[
+              stateIndex
+            ];
+
+
+          let display =
+            original;
+
+
+          if (
+            state &&
+            state.glitching &&
+            original !== " "
+          ) {
+
+            display =
+              state.glitchChar;
+          }
+
+
+          text(
+            display,
+            cursorX,
+            y
+          );
+
+
+          cursorX +=
+            textWidth(
+              original
+            );
+
+
+          stateIndex++;
+        }
       );
 
-      noStroke();
 
-      textAlign(
-        LEFT,
-        TOP
-      );
-
-
-      text(
-        display,
-        cursorX,
-        y
-      );
-
-
-      cursorX +=
-        textWidth(
-          original
-        );
-
-
-      stateIndex++;
+      y +=
+        lineHeight;
     }
-
-
-    y +=
-      lineHeight;
-  }
+  );
 
 
   pop();
@@ -3873,7 +5581,7 @@ function drawIntro() {
 // =====================================================
 
 let welcomeLeft =
-  SIDEBAR_W + 45;
+  SIDEBAR_W + 35;
 
 let welcomeRight =
   width - 45;
@@ -3899,13 +5607,13 @@ let kaoText =
 
 let yokoSize =
   constrain(
-    welcomeWidth * 0.145,
+    welcomeWidth * 0.3,
     70,
-    175
+    200
   );
 
 let kaoSize =
-  yokoSize * 0.52;
+  yokoSize * 0.4;
 
 
 // =====================================================
@@ -3949,7 +5657,7 @@ let kaoW =
 
 
 let welcomeGap =
-  yokoSize * 0.16;
+  yokoSize * 0.2;
 
 let naturalWidth =
   yokoW +
@@ -3966,7 +5674,7 @@ let scaleFactor =
 scaleFactor =
   constrain(
     scaleFactor,
-    0.65,
+    0.55,
     1.35
   );
 
@@ -4928,5 +6636,16 @@ function windowResized() {
   resizeCanvas(
     windowWidth,
     windowHeight
+  );
+}
+  updateLanguageButtons();
+
+function applyBitmapUI(el) {
+
+  if (!el) return;
+
+  el.style(
+    "font-family",
+    UI_FONT
   );
 }
